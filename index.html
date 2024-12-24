@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Rental System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Car Rental System</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#cars">Available Cars</a></li>
+                <li><a href="#rent">Rent a Car</a></li>
+                <li><a href="#return">Return a Car</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="section">
+            <h2>Welcome to Our Car Rental Service</h2>
+            <p>Choose from our wide range of cars to make your journey comfortable and memorable.</p>
+        </section>
+
+        <section id="cars" class="section">
+            <h2>Available Cars</h2>
+            <div id="car-list" class="car-grid"></div>
+        </section>
+
+        <section id="rent" class="section">
+            <h2>Rent a Car</h2>
+            <form id="rentForm">
+                <label for="carId">Enter Car ID:</label>
+                <input type="text" id="carId" placeholder="e.g., 1" required>
+                <button type="submit">Rent</button>
+            </form>
+            <p id="rentMessage" class="message"></p>
+        </section>
+
+        <section id="return" class="section">
+            <h2>Return a Car</h2>
+            <form id="returnForm">
+                <label for="returnCarId">Enter Car ID:</label>
+                <input type="text" id="returnCarId" placeholder="e.g., 1" required>
+                <button type="submit">Return</button>
+            </form>
+            <p id="returnMessage" class="message"></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Car Rental System. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js" defer></script>
+</body>
+</html>
