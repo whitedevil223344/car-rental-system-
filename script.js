@@ -1,79 +1,69 @@
-// Updated car data with more options
-let cars = [
-    { id: "1", model: "Toyota Corolla", rented: false },
-    { id: "2", model: "Honda Civic", rented: false },
-    { id: "3", model: "Tesla Model 3", rented: false },
-    { id: "4", model: "Ford Mustang", rented: false },
-    { id: "5", model: "Chevrolet Camaro", rented: false },
-    { id: "6", model: "BMW 3 Series", rented: false },
-    { id: "7", model: "Audi A4", rented: false },
-    { id: "8", model: "Mercedes-Benz C-Class", rented: false },
-    { id: "9", model: "Hyundai Sonata", rented: false },
-    { id: "10", model: "Volkswagen Passat", rented: false },
+const cars = [
+    { id: 1, name: "Honda Civic", price: 1500, seats: 5, fuel: "Petrol", status: "Available", renter: "" },
+    { id: 2, name: "Toyota Corolla", price: 1800, seats: 5, fuel: "Petrol", status: "Available", renter: "" },
+    { id: 3, name: "Maruti Suzuki Swift", price: 1200, seats: 5, fuel: "Diesel", status: "Available", renter: "" },
+    { id: 4, name: "Hyundai Creta", price: 2200, seats: 5, fuel: "Diesel", status: "Available", renter: "" },
+    { id: 5, name: "Mahindra Scorpio", price: 2500, seats: 7, fuel: "Diesel", status: "Available", renter: "" },
+    { id: 6, name: "Tata Nexon", price: 1800, seats: 5, fuel: "Electric", status: "Available", renter: "" },
+    { id: 7, name: "Ford EcoSport", price: 1700, seats: 5, fuel: "Petrol", status: "Available", renter: "" }
 ];
 
-// Load cars from localStorage if available
-if (localStorage.getItem("cars")) {
-    cars = JSON.parse(localStorage.getItem("cars"));
-} else {
-    localStorage.setItem("cars", JSON.stringify(cars));
-}
-
-// Function to display available cars
-function displayCars() {
-    const carList = document.getElementById("car-list");
-    carList.innerHTML = ""; // Clear the list first
-    cars.forEach((car) => {
-        const carCard = document.createElement("div");
-        carCard.className = "car-card";
-        carCard.innerHTML = `
-            <h3>${car.model}</h3>
-            <p><strong>ID:</strong> ${car.id}</p>
-            <p><strong>Status:</strong> ${car.rented ? "Rented" : "Available"}</p>
+// Function to load cars into the grid
+function loadCars() {
+    const carGrid = document.getElementById("car-grid");
+    carGrid.innerHTML = ""; // Clear the grid
+    cars.forEach(car => {
+        const carTile = document.createElement("div");
+        carTile.className = "car-card";
+        carTile.innerHTML = `
+            <h3>${car.name}</h3>
+            <p>ID: ${car.id}</p>
+            <p>Price: ₹${car.price}/day</p>
+            <p>Seats: ${car.seats}</p>
+            <p>Fuel: ${car.fuel}</p>
+            <p>Status: <span style="color: ${car.status === "Available" ? "green" : "red"}">${car.status}</span></p>
+            ${car.renter ? `<p>Rented by: ${car.renter}</p>` : ""}
         `;
-        carList.appendChild(carCard);
+        carGrid.appendChild(carTile);
     });
 }
 
-// Function to rent a car
-function rentCar(event) {
-    event.preventDefault();
-    const carId = document.getElementById("carId").value;
-    const car = cars.find((c) => c.id === carId);
+// Rent a car
+document.getElementById("rental-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const carId = parseInt(document.getElementById("car-id").value);
+    const customerName = document.getElementById("customer-name").value;
 
-    if (car && !car.rented) {
-        car.rented = true;
-        localStorage.setItem("cars", JSON.stringify(cars));
-        document.getElementById("rentMessage").textContent = "Car rented successfully!";
-        displayCars();
+    const car = cars.find(c => c.id === carId && c.status === "Available");
+    if (car) {
+        car.status = "Rented";
+        car.renter = customerName;
+        document.getElementById("confirmation-message").textContent = `Car ${car.name} has been rented by ${customerName}.`;
+        document.getElementById("confirmation-message").style.color = "green";
+        loadCars();
     } else {
-        document.getElementById("rentMessage").textContent = "Invalid Car ID or already rented.";
+        document.getElementById("confirmation-message").textContent = "Car not available or invalid ID.";
+        document.getElementById("confirmation-message").style.color = "red";
     }
+});
 
-    document.getElementById("rentForm").reset();
-}
+// Return a car
+document.getElementById("return-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const carId = parseInt(document.getElementById("return-car-id").value);
 
-// Function to return a car
-function returnCar(event) {
-    event.preventDefault();
-    const carId = document.getElementById("returnCarId").value;
-    const car = cars.find((c) => c.id === carId);
-
-    if (car && car.rented) {
-        car.rented = false;
-        localStorage.setItem("cars", JSON.stringify(cars));
-        document.getElementById("returnMessage").textContent = "Car returned successfully!";
-        displayCars();
+    const car = cars.find(c => c.id === carId && c.status === "Rented");
+    if (car) {
+        car.status = "Available";
+        car.renter = "";
+        document.getElementById("return-message").textContent = `Car ${car.name} has been returned.`;
+        document.getElementById("return-message").style.color = "green";
+        loadCars();
     } else {
-        document.getElementById("returnMessage").textContent = "Invalid Car ID or already available.";
+        document.getElementById("return-message").textContent = "Car not found or already available.";
+        document.getElementById("return-message").style.color = "red";
     }
+});
 
-    document.getElementById("returnForm").reset();
-}
-
-// Event listeners
-document.getElementById("rentForm").addEventListener("submit", rentCar);
-document.getElementById("returnForm").addEventListener("submit", returnCar);
-
-// Initial display of cars
-displayCars();
+// Initial load
+loadCars();
